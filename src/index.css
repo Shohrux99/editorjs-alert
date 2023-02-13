@@ -103,3 +103,8 @@
   font-weight: bold;
   opacity: 0.9;
 }
+
+.ce-settings__plugin-zone div {
+  display: flex;
+  flex-wrap: wrap;
+}

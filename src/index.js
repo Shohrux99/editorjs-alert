@@ -86,16 +86,7 @@ export default class Alert {
    * @returns {array}
    */
   static get ALERT_TYPES() {
-    return [
-      'primary',
-      'secondary',
-      'info',
-      'success',
-      'warning',
-      'danger',
-      'light',
-      'dark',
-    ];
+    return ['danger', 'info', 'warning', 'success', 'primary'];
   }
 
   static get ALERT_ICONS() {
