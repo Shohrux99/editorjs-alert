@@ -14,11 +14,16 @@ require('./index.css').toString();
  * Import Tool's icon
  */
 import ToolboxIcon from '../assets/icon.svg';
+import ErrorIcon from '../assets/error.svg';
+import InfoIcon from '../assets/info.svg';
+import QuestionIcon from '../assets/question.svg';
+import SuccessIcon from '../assets/success.svg';
+import WarningIcon from '../assets/warning.svg';
 
 /**
  * @class Alert
  * @classdesc Alert Tool for Editor.js
- * @property {AlertData} data - Alert Tool`s input and output data
+ * @property {Alert } data - Alert Tool`s input and output data
  * @property {object} api - Editor.js API instance
  *
  * @typedef {object} AlertData
@@ -93,6 +98,10 @@ export default class Alert {
     ];
   }
 
+  static get ALERT_ICONS() {
+    return [ErrorIcon, InfoIcon, QuestionIcon, SuccessIcon, WarningIcon];
+  }
+
   /**
    * Alert Tool`s styles
    *
@@ -105,6 +114,7 @@ export default class Alert {
       wrapper: 'cdx-alert',
       wrapperForType: (type) => `cdx-alert-${type}`,
       message: 'cdx-alert__message',
+      icon: 'cdx-alert__icon',
     };
   }
 
@@ -118,7 +128,6 @@ export default class Alert {
    */
   constructor({ data, config, api, readOnly }) {
     this.api = api;
-
     this.defaultType = config.defaultType || Alert.DEFAULT_TYPE;
     this.messagePlaceholder =
       config.messagePlaceholder || Alert.DEFAULT_MESSAGE_PLACEHOLDER;
@@ -128,13 +137,23 @@ export default class Alert {
         ? data.type
         : this.defaultType,
       message: data.message || '',
+      icon:
+        data.type === 'danger'
+          ? ErrorIcon
+          : data.type === 'info'
+          ? InfoIcon
+          : data.type === 'warning'
+          ? QuestionIcon
+          : data.type === 'success'
+          ? SuccessIcon
+          : data.type === 'primary'
+          ? WarningIcon
+          : '',
     };
-
     this.container = undefined;
-    
     this.readOnly = readOnly;
   }
-  
+
   /**
    * Returns true to notify the core that read-only mode is supported
    *
@@ -157,6 +176,11 @@ export default class Alert {
 
     this.container = this._make('div', containerClasses);
 
+    const iconEl = this._make('div', [this.CSS.icon], {
+      contentEditable: !this.readOnly,
+      innerHTML: this.data.icon,
+    });
+
     const messageEl = this._make('div', [this.CSS.message], {
       contentEditable: !this.readOnly,
       innerHTML: this.data.message,
@@ -164,6 +188,7 @@ export default class Alert {
 
     messageEl.dataset.placeholder = this.messagePlaceholder;
 
+    this.container.appendChild(iconEl);
     this.container.appendChild(messageEl);
 
     return this.container;
@@ -224,7 +249,6 @@ export default class Alert {
    */
   _changeAlertType(newType) {
     // Save new type
-    this.data.type = newType;
 
     Alert.ALERT_TYPES.forEach((type) => {
       const alertClass = this.CSS.wrapperForType(type);
@@ -234,7 +258,32 @@ export default class Alert {
 
       if (newType === type) {
         // Add an Alert class for the selected Alert type
+        const alertIcon = this.container.querySelector('.cdx-alert__icon');
+
+        if (alertIcon) alertIcon.remove();
+
         this.container.classList.add(alertClass);
+
+        let iconEl = this._make('div', [this.CSS.icon], {
+          contentEditable: !this.readOnly,
+          innerHTML:
+            newType === 'danger'
+              ? ErrorIcon
+              : newType === 'info'
+              ? InfoIcon
+              : newType === 'warning'
+              ? QuestionIcon
+              : newType === 'success'
+              ? SuccessIcon
+              : newType === 'primary'
+              ? WarningIcon
+              : '',
+        });
+
+        this.container.insertBefore(
+          iconEl,
+          this.container.querySelector('.cdx-alert__message')
+        );
       }
     });
   }
@@ -287,6 +336,7 @@ export default class Alert {
     this.data = {
       type: this.defaultType,
       message: data.innerHTML || '',
+      icon: data.icon,
     };
   }
 
@@ -302,6 +352,7 @@ export default class Alert {
         return {
           message: string,
           type: this.DEFAULT_TYPE,
+          icon: this.data.icon,
         };
       },
     };

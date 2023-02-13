@@ -3,10 +3,24 @@
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
+  display: flex;
 }
 
 .cdx-alert__message {
   outline: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.cdx-alert__icon {
+  width: 100px;
+  height: 100px;
+}
+
+.cdx-alert__icon svg {
+  max-width: 60px;
 }
 
 .cdx-alert [contentEditable='true'][data-placeholder]::before {
