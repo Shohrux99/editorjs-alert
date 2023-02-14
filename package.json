@@ -1,6 +1,6 @@
 {
-  "name": "editorjs-alert-with-icons",
-  "version": "1.0.3",
+  "name": "editorjs-alert",
+  "version": "1.0.5",
   "description": "Editor.js tool for adding colorful alerts",
   "main": "./dist/bundle.js",
   "scripts": {
@@ -53,7 +53,8 @@
     "webpack-cli": "^3.3.12"
   },
   "directories": {
-    "example": "examples"
+    "example": "examples",
+    "test": "test"
   },
   "dependencies": {
     "acorn": "^6.4.1",

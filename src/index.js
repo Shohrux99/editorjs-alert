@@ -122,7 +122,6 @@ export default class Alert {
     this.defaultType = config.defaultType || Alert.DEFAULT_TYPE;
     this.messagePlaceholder =
       config.messagePlaceholder || Alert.DEFAULT_MESSAGE_PLACEHOLDER;
-
     this.data = {
       type: Alert.ALERT_TYPES.includes(data.type)
         ? data.type
@@ -139,7 +138,7 @@ export default class Alert {
           ? SuccessIcon
           : data.type === 'primary'
           ? WarningIcon
-          : '',
+          : InfoIcon,
     };
     this.container = undefined;
     this.readOnly = readOnly;
@@ -191,7 +190,7 @@ export default class Alert {
    * @returns {HTMLElement}
    */
   renderSettings() {
-    const settingsContainer = this._make('div');
+    const settingsContainer = this._make('div', 'settingContainer', '');
 
     Alert.ALERT_TYPES.forEach((type) => {
       const settingsButton = this._make(
@@ -254,7 +253,7 @@ export default class Alert {
         if (alertIcon) alertIcon.remove();
 
         this.container.classList.add(alertClass);
-
+        this.data.type = newType;
         let iconEl = this._make('div', [this.CSS.icon], {
           contentEditable: !this.readOnly,
           innerHTML:
@@ -288,7 +287,7 @@ export default class Alert {
   save(alertElement) {
     const messageEl = alertElement.querySelector(`.${this.CSS.message}`);
 
-    return { ...this.data, message: messageEl.innerHTML };
+    return { ...this.data, message: messageEl.innerHTML, icon: this.data.icon };
   }
 
   /**
